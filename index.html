@@ -66,7 +66,7 @@
             <input type="radio" name="comment" value="4" id="comment-4">
             <span class="checkmark"></span>
         </label>
-        <div class="do-comment-control">
+        <div class="do-comment-control" id="comment-window-status-change">
             <button class="btn" id="do-comment-btn">发布</button>
             <button class="btn" id="exit-comment-btn">取消</button>
         </div>
@@ -140,9 +140,12 @@
             return false;
         });
 
-        $('#comment-window-container').click(function () {
+        // $('#comment-window-container').click(function () {
+        //     $('#comment-window-container').addClass('hidden');
+        // });
+        $('#comment-window-status-change').click(function() {
             $('#comment-window-container').addClass('hidden');
-        });
+        })
 
         $('#share-window').click(function () {
             return false;
