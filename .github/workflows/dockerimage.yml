@@ -1,0 +1,14 @@
+name: Docker Image CI/CD
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build the Docker image
+        run: |
+          docker build . -t give-flower
+          docker tag give-flower ${{ secrets.DOCKER_USERNAME }}/give-flower:${{ github.sha }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push ${{ secrets.DOCKER_USERNAME }}/give-flower
