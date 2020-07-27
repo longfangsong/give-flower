@@ -98,14 +98,14 @@ textarea {
    ========================================================================== */
 
 #part1 {
-    background-image: url("/img/part1.png");
+    background-image: url("https://cloud.shuosc.com/qian-principle/img/part1.png");
     background-size: cover;
     width: 100vw;
     height: 65vw;
 }
 
 #part2 {
-    background-image: url("/img/part2.png");
+    background-image: url("https://cloud.shuosc.com/qian-principle/img/part2.png");
     background-size: cover;
     width: 100vw;
     padding: 40px 30px 76px;
