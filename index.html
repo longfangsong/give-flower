@@ -107,15 +107,8 @@
     function renderShareImage() {
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext("2d");
-        // let img = document.getElementById('share-img');
         let img = new Image();
-        if (myLastCommentId === 0 && myFlowerIndex === 0) {
-            img.src = `/img/null.jpg`;
-        } else if (myLastCommentId === 0) {
-            img.src = `/img/flower-only.jpg`;
-        } else {
-            img.src = `/img/${myLastCommentId}.jpg`;
-        }
+        img.src = `/img/${myLastCommentId}-${myFlowerIndex !== 0}.jpg`;
         img.onload = function () {
             ctx.drawImage(img, 0, 0, 300, 550);
             if (myFlowerIndex !== 0)
@@ -179,7 +172,6 @@
             $('#comment-window-container').removeClass('hidden');
         });
         $('#share-btn').click(function () {
-            // renderShareImage();
             $('#share-window-container').removeClass('hidden');
         });
         $('#do-comment-btn').click(function () {
