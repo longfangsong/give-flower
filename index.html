@@ -108,7 +108,8 @@
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext("2d");
         let img = new Image();
-        img.src = `/img/${myLastCommentId}-${myFlowerIndex !== 0}.jpg`;
+        img.src = `https://cloud.shuosc.com/qian-principle/img/${myLastCommentId}-${myFlowerIndex !== 0}.jpg`;
+        console.log(img)
         img.onload = function () {
             ctx.drawImage(img, 0, 0, 300, 550);
             if (myFlowerIndex !== 0)
