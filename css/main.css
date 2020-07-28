@@ -98,14 +98,14 @@ textarea {
    ========================================================================== */
 
 #part1 {
-    background-image: url("https://cloud.shuosc.com/qian-principle/img/part1.png");
-    background-size: cover;
+    background-image: url("/img/part1.jpg");
+    background-size: 100vw 140vw;
     width: 100vw;
-    height: 65vw;
+    height: 140vw;
 }
 
 #part2 {
-    background-image: url("https://cloud.shuosc.com/qian-principle/img/part2.png");
+    background-image: url("/img/part2.jpg");
     background-size: cover;
     width: 100vw;
     padding: 40px 30px 76px;
@@ -338,6 +338,14 @@ textarea {
     display: block;
     width: 0;
     height: 150%;
+}
+
+.fake-hidden {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    z-index: -1000;
 }
 
 /*

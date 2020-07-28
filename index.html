@@ -73,19 +73,22 @@
     </div>
 </div>
 
-<div id="share-window-container"  class="hidden">
-    <img src="img/QR.png" width="300" height="457">
+<div id="share-window-container" class="hidden">
+    <img id="share-img" width="300" height="550" src="img/null.jpg">
 </div>
+
+<canvas id="canvas" width="300" height="550" class="fake-hidden"></canvas>
 
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
 <script>
-    // const baseurl = 'http://127.0.0.1:7379/'
     const baseurl = 'https://cloud.shuosc.com/api/webdis'
     let flowers = 0;
+    let myFlowerIndex = 0;
     let current = 0;
+    let myLastCommentId = 0;
 
     function insertComment(i) {
         let text = $(`#comment-${i}-label`).text().trim();
@@ -101,6 +104,36 @@
         }
     }
 
+    function renderShareImage() {
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext("2d");
+        // let img = document.getElementById('share-img');
+        let img = new Image();
+        if (myLastCommentId === 0 && myFlowerIndex === 0) {
+            img.src = `/img/null.jpg`;
+        } else if (myLastCommentId === 0) {
+            img.src = `/img/flower-only.jpg`;
+        } else {
+            img.src = `/img/${myLastCommentId}.jpg`;
+        }
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0, 300, 550);
+            if (myFlowerIndex !== 0)
+                ctx.fillText(myFlowerIndex, 101, 318);
+        }
+        window.setTimeout(function () {
+            document.getElementById('share-img').src = document.getElementById('canvas').toDataURL();
+        }, 1000);
+    }
+
+    function fetchFlowerCount() {
+        $.ajax(baseurl + 'GET/flower', {
+            success: function (x) {
+                $('#flower-count').text(x['GET']);
+            }
+        });
+    }
+
     $(function () {
         function refresh() {
             setTimeout(
@@ -113,17 +146,14 @@
                                     insertComment(current);
                                 }
                         }
-                    })
+                    });
+                    fetchFlowerCount();
                     refresh();
                 }, 1000
             )
         }
 
-        $.ajax(baseurl + 'GET/flower', {
-            success: function (x) {
-                $('#flower-count').text(x['GET']);
-            }
-        });
+        fetchFlowerCount();
         $.ajax(baseurl + `LRANGE/comments/0/5`, {
             success: function (x) {
                 for (let i of x['LRANGE']) {
@@ -136,36 +166,30 @@
         $('#share-window-container').click(function () {
             $('#share-window-container').addClass('hidden');
         });
-
         $('#share-window').click(function () {
             return false;
         });
-
-        // $('#comment-window-container').click(function () {
-        //     $('#comment-window-container').addClass('hidden');
-        // });
-        $('#comment-window-status-change').click(function() {
+        $('#comment-window-status-change').click(function () {
             $('#comment-window-container').addClass('hidden');
         })
-
         $('#share-window').click(function () {
             return false;
         });
-
         $('#comment-btn').click(function () {
             $('#comment-window-container').removeClass('hidden');
         });
-
         $('#share-btn').click(function () {
+            // renderShareImage();
             $('#share-window-container').removeClass('hidden');
         });
-
         $('#do-comment-btn').click(function () {
             let commentId = $("input[name='comment']:checked").val();
             $.ajax(baseurl + `LPUSH/comments/${commentId}`, {
                 success: function (_) {
                     insertComment(commentId);
                     current = commentId;
+                    myLastCommentId = commentId;
+                    renderShareImage();
                 }
             });
             $('#comment-window-container').addClass('hidden');
@@ -175,14 +199,29 @@
         });
         $('#flower-count').text(flowers);
         $('#give-flower').click(function () {
-            flowers++;
             $.ajax(baseurl + 'INCR/flower', {
                 success: function (x) {
+                    flowers = x['INCR'];
+                    myFlowerIndex = flowers;
                     $('#flower-count').text(x['INCR']);
+                    renderShareImage();
                 }
             });
         });
-    })
+
+        let canvas = document.getElementById('canvas');
+        let rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * devicePixelRatio;
+        canvas.height = rect.height * devicePixelRatio;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+
+        let ctx = canvas.getContext("2d");
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+        ctx.font = "12px sans-serif";
+
+        renderShareImage();
+    });
 </script>
 </body>
 </html>
